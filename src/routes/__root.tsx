@@ -88,15 +88,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:description",
         content:
-          "Strategic growth systems designed to attract, convert and retain customers.",
+          "Strategic growth systems designed to attract, convert and retain customers. Start your free AI Growth Audit with Sibiso Marketing.",
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Sibiso Marketing" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Sibiso Marketing — Turn Your Visibility Into Revenue" },
+      { name: "twitter:description", content: "Strategic growth systems designed to attract, convert and retain customers. Start your free AI Growth Audit with Sibiso Marketing." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6ef55814-2869-422e-90e1-8ad47347c7ac" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6ef55814-2869-422e-90e1-8ad47347c7ac" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
