@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand/logo";
+import { ThemeToggle } from "@/components/site/theme-toggle";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +10,7 @@ const links = [
   { href: "#audit", label: "Growth Audit" },
   { href: "#how", label: "How It Works" },
   { href: "#solutions", label: "Solutions" },
-  { href: "#cases", label: "Case Studies" },
+  { href: "#newsroom", label: "Newsroom" },
   { href: "#podcast", label: "Podcast" },
 ];
 
@@ -37,43 +38,47 @@ export function SiteNav() {
             "flex items-center justify-between rounded-2xl px-4 sm:px-5 h-14 transition-all",
             scrolled
               ? "glass-card shadow-soft"
-              : "bg-white/60 border border-transparent",
+              : "bg-white/60 dark:bg-neutral-900/40 border border-transparent",
           )}
         >
-          <a href="#top" className="flex items-center" aria-label="Sibiso Marketing home">
+          <a href="/#top" className="flex items-center" aria-label="Sibiso Marketing home">
             <Logo />
           </a>
           <nav className="hidden lg:flex items-center gap-7">
             {links.map((l) => (
               <a
                 key={l.href}
-                href={l.href}
-                className="text-sm font-medium text-black/70 hover:text-black transition-colors"
+                href={`/${l.href}`}
+                className="text-sm font-medium text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors"
               >
                 {l.label}
               </a>
             ))}
           </nav>
           <div className="hidden lg:flex items-center gap-2">
-            <a href="#strategy">
+            <ThemeToggle />
+            <a href="/#strategy">
               <Button variant="ghost" size="sm" className="rounded-full">
                 Book Strategy Session
               </Button>
             </a>
-            <a href="#audit">
+            <a href="/audit">
               <Button variant="gradient" size="sm" className="rounded-full h-9 px-5">
                 Start Free Growth Audit
               </Button>
             </a>
           </div>
-          <button
-            className="lg:hidden inline-flex items-center justify-center h-9 w-9 rounded-full border border-black/10"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Toggle menu"
-            aria-expanded={open}
-          >
-            {open ? <X size={18} /> : <Menu size={18} />}
-          </button>
+          <div className="lg:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-black/10 dark:border-white/15 text-black dark:text-white"
+              onClick={() => setOpen((v) => !v)}
+              aria-label="Toggle menu"
+              aria-expanded={open}
+            >
+              {open ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
         </div>
 
         {open && (
@@ -82,21 +87,21 @@ export function SiteNav() {
               {links.map((l) => (
                 <a
                   key={l.href}
-                  href={l.href}
+                  href={`/${l.href}`}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-black/80 hover:bg-black/5"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-black/80 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/10"
                 >
                   {l.label}
                 </a>
               ))}
             </nav>
             <div className="mt-3 flex flex-col gap-2">
-              <a href="#strategy" onClick={() => setOpen(false)}>
+              <a href="/#strategy" onClick={() => setOpen(false)}>
                 <Button variant="subtle" className="w-full rounded-full">
                   Book Strategy Session
                 </Button>
               </a>
-              <a href="#audit" onClick={() => setOpen(false)}>
+              <a href="/audit" onClick={() => setOpen(false)}>
                 <Button variant="gradient" className="w-full rounded-full">
                   Start Free Growth Audit
                 </Button>
