@@ -14,13 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      newsroom_articles: {
+        Row: {
+          created_at: string
+          id: string
+          likes_count: number
+          published_at: string
+          source_name: string
+          source_url: string
+          summary: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          likes_count?: number
+          published_at?: string
+          source_name: string
+          source_url: string
+          summary: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          likes_count?: number
+          published_at?: string
+          source_name?: string
+          source_url?: string
+          summary?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      newsroom_comments: {
+        Row: {
+          article_id: string
+          comment: string
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          article_id: string
+          comment: string
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          article_id?: string
+          comment?: string
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "newsroom_comments_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "newsroom_articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_article_like: { Args: { _article_id: string }; Returns: number }
     }
     Enums: {
       [_ in never]: never
