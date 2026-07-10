@@ -28,18 +28,18 @@ export function Section({
         {(eyebrow || title || description) && (
           <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center")}>
             {eyebrow && (
-              <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-black/70">
+              <div className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-black/70 dark:text-white/70">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-gradient" />
                 {eyebrow}
               </div>
             )}
             {title && (
-              <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-extrabold text-black leading-[1.05]">
+              <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-extrabold text-black dark:text-white leading-[1.05]">
                 {title}
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-base sm:text-lg text-black/60 leading-relaxed">
+              <p className="mt-4 text-base sm:text-lg text-black/60 dark:text-white/60 leading-relaxed">
                 {description}
               </p>
             )}
@@ -55,7 +55,7 @@ export function Eyebrow({ children, className }: { children: ReactNode; classNam
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-black/70",
+        "inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-black/70 dark:text-white/70",
         className,
       )}
     >

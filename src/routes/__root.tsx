@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { ThemeProvider, themeInitScript } from "../lib/theme-provider";
+import { ConversionPopup } from "../components/site/conversion-popup";
 
 function NotFoundComponent() {
   return (
@@ -77,6 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#0A0A0A" },
       { title: "Sibiso Marketing — Turn Your Visibility Into Revenue" },
       {
         name: "description",
@@ -92,20 +95,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Sibiso Marketing" },
+      { property: "og:image", content: "https://sibisoza.lovable.app/og-image.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Sibiso Marketing — Turn Your Visibility Into Revenue" },
-      { name: "twitter:description", content: "Strategic growth systems designed to attract, convert and retain customers. Start your free AI Growth Audit with Sibiso Marketing." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6ef55814-2869-422e-90e1-8ad47347c7ac" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6ef55814-2869-422e-90e1-8ad47347c7ac" },
+      { name: "twitter:description", content: "Strategic growth systems designed to attract, convert and retain customers." },
+      { name: "twitter:image", content: "https://sibisoza.lovable.app/og-image.jpg" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap",
       },
+    ],
+    scripts: [
+      // Pre-hydration theme init — avoids light-mode flash for dark users.
+      { children: themeInitScript },
     ],
   }),
   shellComponent: RootShell,
@@ -133,8 +141,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <ThemeProvider>
+        <Outlet />
+        <ConversionPopup />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

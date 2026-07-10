@@ -9,38 +9,74 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NewsroomArticleIdRouteImport } from './routes/newsroom.$articleId'
+import { Route as AuditReportRouteImport } from './routes/audit.report'
 
+const AuditRoute = AuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsroomArticleIdRoute = NewsroomArticleIdRouteImport.update({
+  id: '/newsroom/$articleId',
+  path: '/newsroom/$articleId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditReportRoute = AuditReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => AuditRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/audit': typeof AuditRouteWithChildren
+  '/audit/report': typeof AuditReportRoute
+  '/newsroom/$articleId': typeof NewsroomArticleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/audit': typeof AuditRouteWithChildren
+  '/audit/report': typeof AuditReportRoute
+  '/newsroom/$articleId': typeof NewsroomArticleIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/audit': typeof AuditRouteWithChildren
+  '/audit/report': typeof AuditReportRoute
+  '/newsroom/$articleId': typeof NewsroomArticleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/audit' | '/audit/report' | '/newsroom/$articleId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/audit' | '/audit/report' | '/newsroom/$articleId'
+  id: '__root__' | '/' | '/audit' | '/audit/report' | '/newsroom/$articleId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuditRoute: typeof AuditRouteWithChildren
+  NewsroomArticleIdRoute: typeof NewsroomArticleIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/audit': {
+      id: '/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +84,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/newsroom/$articleId': {
+      id: '/newsroom/$articleId'
+      path: '/newsroom/$articleId'
+      fullPath: '/newsroom/$articleId'
+      preLoaderRoute: typeof NewsroomArticleIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit/report': {
+      id: '/audit/report'
+      path: '/report'
+      fullPath: '/audit/report'
+      preLoaderRoute: typeof AuditReportRouteImport
+      parentRoute: typeof AuditRoute
+    }
   }
 }
 
+interface AuditRouteChildren {
+  AuditReportRoute: typeof AuditReportRoute
+}
+
+const AuditRouteChildren: AuditRouteChildren = {
+  AuditReportRoute: AuditReportRoute,
+}
+
+const AuditRouteWithChildren = AuditRoute._addFileChildren(AuditRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuditRoute: AuditRouteWithChildren,
+  NewsroomArticleIdRoute: NewsroomArticleIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
