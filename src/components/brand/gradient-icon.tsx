@@ -8,11 +8,6 @@ interface GradientIconProps {
   label?: string;
 }
 
-/**
- * Renders a lucide icon stroked with the brand gradient by wrapping the
- * currentColor stroke in a transparent-text container that inherits from a
- * gradient text color.
- */
 export function GradientIcon({ icon: Icon, size = "md", className, label }: GradientIconProps) {
   const box = size === "sm" ? "h-10 w-10" : size === "lg" ? "h-16 w-16" : "h-12 w-12";
   const iconSize = size === "sm" ? 20 : size === "lg" ? 30 : 24;
@@ -21,7 +16,7 @@ export function GradientIcon({ icon: Icon, size = "md", className, label }: Grad
     <span
       aria-label={label}
       className={cn(
-        "inline-flex items-center justify-center rounded-2xl border border-black/10 bg-white shadow-soft",
+        "inline-flex items-center justify-center rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-neutral-900 shadow-soft",
         box,
         className,
       )}
