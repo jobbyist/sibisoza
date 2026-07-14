@@ -600,10 +600,194 @@ export const INDUSTRY_BRANCHES: Record<string, Question[]> = {
       ],
     },
   ],
+  construction: [
+    {
+      id: "con_type",
+      category: "Construction",
+      type: "single_select",
+      prompt: "Which best describes {{businessName}}?",
+      options: [
+        { value: "residential", label: "Residential builder / contractor" },
+        { value: "commercial", label: "Commercial contractor" },
+        { value: "specialist", label: "Specialist trade (plumbing, electrical, etc.)" },
+        { value: "developer", label: "Property developer" },
+      ],
+    },
+    {
+      id: "con_project_size",
+      category: "Construction",
+      type: "single_select",
+      prompt: "What's your typical project size?",
+      options: [
+        { value: "under_250k", label: "Under R250k" },
+        { value: "250k_2m", label: "R250k – R2M" },
+        { value: "2m_10m", label: "R2M – R10M" },
+        { value: "10m_plus", label: "R10M+" },
+      ],
+    },
+    {
+      id: "con_pipeline",
+      category: "Construction",
+      type: "single_select",
+      prompt: "How healthy is your project pipeline for the next 6 months?",
+      options: [
+        { value: "empty", label: "Empty — chasing every job" },
+        { value: "patchy", label: "Patchy — some gaps" },
+        { value: "steady", label: "Steady — booked out" },
+        { value: "overflowing", label: "Overflowing — turning work away" },
+      ],
+    },
+    {
+      id: "con_lead_source",
+      category: "Construction",
+      type: "single_select",
+      prompt: "Where do most quality leads come from today?",
+      options: [
+        { value: "referrals", label: "Referrals & repeat clients" },
+        { value: "tenders", label: "Tenders / RFPs" },
+        { value: "google", label: "Google search / Maps" },
+        { value: "social", label: "Social proof (Instagram, showcases)" },
+      ],
+    },
+  ],
+  manufacturing: [
+    {
+      id: "mfg_model",
+      category: "Manufacturing",
+      type: "single_select",
+      prompt: "Which best describes the operation?",
+      options: [
+        { value: "b2b", label: "B2B — sell to other businesses" },
+        { value: "b2c", label: "B2C — sell to consumers" },
+        { value: "contract", label: "Contract / white-label manufacturer" },
+        { value: "hybrid", label: "Hybrid mix" },
+      ],
+    },
+    {
+      id: "mfg_distribution",
+      category: "Manufacturing",
+      type: "single_select",
+      prompt: "How do you get product to customers?",
+      options: [
+        { value: "direct", label: "Direct sales team" },
+        { value: "distributors", label: "Distributors / wholesalers" },
+        { value: "retail", label: "Retail partners" },
+        { value: "mixed", label: "Mixed channels" },
+      ],
+    },
+    {
+      id: "mfg_capacity",
+      category: "Manufacturing",
+      type: "single_select",
+      prompt: "What's your current capacity utilisation?",
+      options: [
+        { value: "under_50", label: "Under 50% — lots of headroom" },
+        { value: "50_80", label: "50–80%" },
+        { value: "80_plus", label: "80%+ — near max" },
+      ],
+    },
+    {
+      id: "mfg_growth_lever",
+      category: "Manufacturing",
+      type: "single_select",
+      prompt: "Which lever would move the needle most right now?",
+      options: [
+        { value: "new_accounts", label: "Opening new accounts" },
+        { value: "wallet", label: "Growing wallet-share of existing accounts" },
+        { value: "export", label: "Export / new geographies" },
+        { value: "new_product", label: "Launching new product lines" },
+      ],
+    },
+  ],
+  education: [
+    {
+      id: "edu_type",
+      category: "Education",
+      type: "single_select",
+      prompt: "Which best describes {{businessName}}?",
+      options: [
+        { value: "school", label: "School / academy" },
+        { value: "tertiary", label: "Tertiary / college" },
+        { value: "online_courses", label: "Online courses / edtech" },
+        { value: "training", label: "Corporate training provider" },
+      ],
+    },
+    {
+      id: "edu_intake_cycle",
+      category: "Education",
+      type: "single_select",
+      prompt: "How does enrolment work?",
+      options: [
+        { value: "rolling", label: "Rolling — sign-ups any time" },
+        { value: "termly", label: "Termly / quarterly intakes" },
+        { value: "annual", label: "Annual intake" },
+      ],
+    },
+    {
+      id: "edu_funnel_stage",
+      category: "Education",
+      type: "single_select",
+      prompt: "Where does the enrolment funnel break down most?",
+      options: [
+        { value: "awareness", label: "Awareness — not enough enquiries" },
+        { value: "info", label: "Prospectus requests don't convert to applications" },
+        { value: "apply", label: "Applications don't complete / pay" },
+        { value: "retention", label: "Students don't renew / progress" },
+      ],
+    },
+  ],
+  financial_services: [
+    {
+      id: "fin_type",
+      category: "Financial Services",
+      type: "single_select",
+      prompt: "Which best describes the practice?",
+      options: [
+        { value: "advisory", label: "Wealth / financial advisory" },
+        { value: "insurance", label: "Insurance / brokerage" },
+        { value: "lending", label: "Lending / credit" },
+        { value: "fintech", label: "Fintech product" },
+      ],
+    },
+    {
+      id: "fin_aum",
+      category: "Financial Services",
+      type: "single_select",
+      prompt: "What's your assets-under-management or book size?",
+      options: [
+        { value: "under_50m", label: "Under R50M" },
+        { value: "50_500m", label: "R50M – R500M" },
+        { value: "500m_plus", label: "R500M+" },
+        { value: "na", label: "Not applicable" },
+      ],
+    },
+    {
+      id: "fin_client_source",
+      category: "Financial Services",
+      type: "single_select",
+      prompt: "Where do new clients primarily come from today?",
+      options: [
+        { value: "referrals", label: "Referrals" },
+        { value: "coi", label: "Centres of influence (accountants, lawyers)" },
+        { value: "digital", label: "Digital marketing" },
+        { value: "outbound", label: "Outbound / cold outreach" },
+      ],
+    },
+    {
+      id: "fin_trust",
+      category: "Financial Services",
+      type: "single_select",
+      prompt: "How systematically do you build trust with prospects (content, reviews, thought leadership)?",
+      options: [
+        { value: "none", label: "Not at all" },
+        { value: "adhoc", label: "Ad hoc" },
+        { value: "systematic", label: "Systematically, on a schedule" },
+      ],
+    },
+  ],
 };
 
-/** Fallback branch used for industries without a dedicated set yet. */
-// TODO: dedicated branch — replace with tailored questions per industry
+/** Fallback branch used for "Other" or industries without a dedicated set. */
 export const GENERIC_BRANCH: Question[] = [
   {
     id: "gen_ideal_customer",
