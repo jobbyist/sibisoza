@@ -12,9 +12,12 @@ interface LogoProps {
  */
 export function Logo({ variant = "dark", className, showTagline = false }: LogoProps) {
   const isLight = variant === "light";
-  const textClass = isLight ? "text-white" : "text-black";
-  const ringStroke = isLight ? "#ffffff" : "#000000";
-  const crescentFill = variant === "gradient" ? "url(#logo-grad)" : isLight ? "#ffffff" : "#000000";
+  // In dark mode, invert to white automatically for the default (dark) variant.
+  const textClass = isLight
+    ? "text-white"
+    : "text-black dark:text-white";
+  const ringStroke = "currentColor";
+  const crescentFill = variant === "gradient" ? "url(#logo-grad)" : "currentColor";
 
   return (
     <div className={cn("inline-flex items-center gap-2 select-none", className)}>
@@ -45,7 +48,12 @@ export function Logo({ variant = "dark", className, showTagline = false }: LogoP
         <span>&nbsp;MARKETING</span>
       </span>
       {showTagline && (
-        <span className={cn("hidden sm:inline text-xs font-medium", isLight ? "text-white/70" : "text-black/60")}>
+        <span
+          className={cn(
+            "hidden sm:inline text-xs font-medium",
+            isLight ? "text-white/70" : "text-black/60 dark:text-white/70",
+          )}
+        >
           Strategic Growth Partner
         </span>
       )}
