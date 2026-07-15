@@ -58,7 +58,11 @@ export function SiteNav() {
           <div className="hidden lg:flex items-center gap-2">
             <ThemeToggle />
             <a href="/#strategy">
-              <Button variant="ghost" size="sm" className="rounded-full">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="rounded-full dark:text-black dark:bg-white/95 dark:hover:bg-white dark:hover:text-black"
+              >
                 Book Strategy Session
               </Button>
             </a>
@@ -97,7 +101,10 @@ export function SiteNav() {
             </nav>
             <div className="mt-3 flex flex-col gap-2">
               <a href="/#strategy" onClick={() => setOpen(false)}>
-                <Button variant="subtle" className="w-full rounded-full">
+                <Button
+                  variant="subtle"
+                  className="w-full rounded-full dark:text-black dark:bg-white/95 dark:hover:bg-white dark:hover:text-black"
+                >
                   Book Strategy Session
                 </Button>
               </a>

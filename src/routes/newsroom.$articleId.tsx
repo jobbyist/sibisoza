@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Heart, ExternalLink, MessageCircle, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { SiteNav } from "@/components/site/nav";
@@ -67,16 +68,24 @@ function ArticleDetail() {
   const onLike = async () => {
     if (!article || liked || liking) return;
     setLiking(true);
+    const prevCount = article.likes_count;
     // Optimistic
-    setArticle({ ...article, likes_count: article.likes_count + 1 });
+    setArticle({ ...article, likes_count: prevCount + 1 });
     setLiked(true);
     window.localStorage.setItem(`liked_${articleId}`, "1");
-    const { error } = await supabase.rpc("increment_article_like", { _article_id: articleId });
+    const { data, error } = await supabase.rpc("increment_article_like", {
+      _article_id: articleId,
+    });
     if (error) {
       // rollback
-      setArticle({ ...article, likes_count: article.likes_count });
+      setArticle({ ...article, likes_count: prevCount });
       setLiked(false);
       window.localStorage.removeItem(`liked_${articleId}`);
+      toast.error("Couldn't save your like", {
+        description: "Please check your connection and try again.",
+      });
+    } else if (typeof data === "number") {
+      setArticle((a) => (a ? { ...a, likes_count: data } : a));
     }
     setLiking(false);
   };
@@ -93,6 +102,13 @@ function ArticleDetail() {
     if (!error && data) {
       setComments((prev) => [data as Comment, ...prev]);
       setText("");
+      toast.success("Comment posted");
+    } else {
+      toast.error("Couldn't post your comment", {
+        description: error?.message?.includes("length")
+          ? "Please keep your name under 80 characters and comment under 2000."
+          : "Something went wrong. Please try again in a moment.",
+      });
     }
     setPosting(false);
   };
