@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider, themeInitScript } from "../lib/theme-provider";
 import { ConversionPopup } from "../components/site/conversion-popup";
+import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
@@ -144,6 +145,7 @@ function RootComponent() {
       <ThemeProvider>
         <Outlet />
         <ConversionPopup />
+        <Toaster richColors position="top-right" closeButton />
       </ThemeProvider>
     </QueryClientProvider>
   );
