@@ -19,6 +19,8 @@ export type AiReport = {
   industryLabel: string;
   pillars: AiPillar[];
   recommendations: AiRecommendation[];
+  generatedAt: string;
+  provider: "claude" | "fallback";
 };
 
 function extractJson(text: string): unknown {
@@ -51,7 +53,7 @@ function clamp(n: unknown, lo = 20, hi = 96): number {
   return Math.max(lo, Math.min(hi, Math.round(v)));
 }
 
-function normalize(raw: unknown): AiReport {
+function normalize(raw: unknown, provider: AiReport["provider"] = "claude"): AiReport {
   const r = (raw ?? {}) as Record<string, unknown>;
   const pillarsIn = Array.isArray(r.pillars) ? (r.pillars as Record<string, unknown>[]) : [];
   const recsIn = Array.isArray(r.recommendations)
@@ -90,6 +92,8 @@ function normalize(raw: unknown): AiReport {
     industryLabel: String(r.industryLabel ?? "").slice(0, 120),
     pillars,
     recommendations,
+    generatedAt: new Date().toISOString(),
+    provider,
   };
 }
 
@@ -117,7 +121,60 @@ Rules:
 - Provide 6 to 8 recommendations, prioritised by impact.
 - Be specific to their industry, revenue range, budget, urgency and stated growth challenge.
 - Tone: sharp, confident, strategic — never generic advice.
-- Do NOT include any keys other than the schema above.`;
+- Do NOT include any keys other than the schema above.
+- Respond with ONLY the JSON object, nothing else.`;
+
+async function callClaude(answers: Record<string, unknown>, apiKey: string): Promise<AiReport> {
+  const userPrompt = `Audit answers (JSON):\n${JSON.stringify(answers, null, 2)}\n\nGenerate the Growth Strategy Report now. Return only the JSON object.`;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 55_000);
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: "claude-sonnet-4-5-20250929",
+        max_tokens: 4096,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: userPrompt }],
+      }),
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      console.error(`[generateAuditReport] Anthropic ${res.status}: ${body}`);
+      if (res.status === 401 || res.status === 403) {
+        throw new Error("Claude API key is invalid or missing permissions.");
+      }
+      if (res.status === 429) {
+        throw new Error("Claude is rate-limiting us. Please retry in a few seconds.");
+      }
+      if (res.status === 529 || res.status >= 500) {
+        throw new Error("Claude is overloaded right now. Please retry in a moment.");
+      }
+      throw new Error(`Claude request failed (${res.status}).`);
+    }
+
+    const json = (await res.json()) as {
+      content?: Array<{ type: string; text?: string }>;
+    };
+    const text =
+      json.content?.filter((c) => c.type === "text").map((c) => c.text ?? "").join("").trim() ?? "";
+    if (!text) throw new Error("Claude returned an empty response.");
+
+    const parsed = extractJson(text);
+    return normalize(parsed, "claude");
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 export const generateAuditReport = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => {
@@ -125,45 +182,11 @@ export const generateAuditReport = createServerFn({ method: "POST" })
     return { answers: d.answers ?? {} };
   })
   .handler(async ({ data }): Promise<AiReport> => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("AI is not configured. Please contact support.");
-
-    const userPrompt = `Audit answers (JSON):\n${JSON.stringify(data.answers, null, 2)}\n\nGenerate the Growth Strategy Report now.`;
-
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${key}`,
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3.5-flash",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userPrompt },
-        ],
-        response_format: { type: "json_object" },
-      }),
-    });
-
-    if (!res.ok) {
-      const body = await res.text();
-      console.error(`[generateAuditReport] AI gateway ${res.status}: ${body}`);
-      if (res.status === 429) {
-        throw new Error("We're being rate-limited by the AI. Please retry in a few seconds.");
-      }
-      if (res.status === 402) {
-        throw new Error("AI credits are exhausted. Please try again later or contact support.");
-      }
-      throw new Error(`AI request failed (${res.status}). Please retry.`);
+    const key = process.env.ANTHROPIC_API_KEY;
+    if (!key) {
+      throw new Error(
+        "ANTHROPIC_API_KEY is not configured. Please add it in the project settings.",
+      );
     }
-
-    const json = (await res.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-    const content = json.choices?.[0]?.message?.content ?? "";
-    if (!content) throw new Error("The AI returned an empty response. Please retry.");
-
-    const parsed = extractJson(content);
-    return normalize(parsed);
+    return await callClaude(data.answers, key);
   });
