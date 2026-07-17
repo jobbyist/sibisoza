@@ -163,10 +163,31 @@ export async function downloadReportPdf(
     doc.line(margin, y - 6, pageW - margin, y - 6);
   });
 
-  // ---------- Footer on every page ----------
+  // ---------- Watermark + footer on every page ----------
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
+
+    // Diagonal branded watermark (light, non-intrusive)
+    const gState = (doc as unknown as {
+      GState?: new (o: { opacity: number }) => unknown;
+      setGState?: (g: unknown) => void;
+    });
+    if (gState.GState && gState.setGState) {
+      gState.setGState(new gState.GState({ opacity: 0.06 }));
+    }
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(72);
+    doc.setTextColor(...BRAND_START);
+    doc.text("SIBISO MARKETING", pageW / 2, pageH / 2, {
+      align: "center",
+      angle: 30,
+    });
+    if (gState.GState && gState.setGState) {
+      gState.setGState(new gState.GState({ opacity: 1 }));
+    }
+
+    // Footer
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(...MUTED);
