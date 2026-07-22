@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { SiteNav } from "@/components/site/nav";
 import { Button } from "@/components/ui/button";
-import { getServiceBySlug, SERVICES } from "@/lib/services-data";
+import { getServiceBySlug, SERVICES, type ServiceDetail } from "@/lib/services-data";
 import { CALENDLY_URL } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
@@ -66,7 +66,7 @@ function ServiceNotFound() {
 }
 
 function ServicePage() {
-  const { service } = Route.useLoaderData();
+  const { service } = Route.useLoaderData() as { service: ServiceDetail };
   const Icon = service.icon;
 
   const purchaseHref = `mailto:hello@sibisomarketing.co.za?subject=${encodeURIComponent(
