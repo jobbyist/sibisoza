@@ -180,7 +180,7 @@ function ServicePage() {
               </span>
               <h2 className="mt-5 text-xl font-bold">What you get</h2>
               <ul className="mt-4 space-y-3">
-                {service.includes.map((item) => (
+                {service.includes.map((item: string) => (
                   <li key={item} className="flex items-start gap-2 text-sm text-black/70 dark:text-white/70">
                     <CheckCircle2 className="h-4 w-4 mt-0.5 text-brand-gradient shrink-0" />
                     <span>{item}</span>
@@ -195,7 +195,7 @@ function ServicePage() {
         <section className="mt-20">
           <h2 className="text-2xl sm:text-3xl font-extrabold">Outcomes you can expect</h2>
           <div className="mt-6 grid md:grid-cols-3 gap-4">
-            {service.outcomes.map((o, i) => (
+            {service.outcomes.map((o: string, i: number) => (
               <div
                 key={o}
                 className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 p-6"
@@ -213,7 +213,7 @@ function ServicePage() {
         <section className="mt-20">
           <h2 className="text-2xl sm:text-3xl font-extrabold">Our process</h2>
           <div className="mt-6 grid md:grid-cols-3 gap-4">
-            {service.process.map((p, i) => (
+            {service.process.map((p: { title: string; copy: string }, i: number) => (
               <div
                 key={p.title}
                 className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 p-6"
