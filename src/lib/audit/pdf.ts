@@ -1,4 +1,6 @@
-import type { AiReport } from "./generate-report.functions";
+import type { Report } from "./report";
+
+type ReportForPdf = Report & { summary?: string };
 
 // Sibiso brand colors (approximate — matches the on-screen gradient endpoints).
 const BRAND_START: [number, number, number] = [124, 58, 237]; // violet-600
@@ -16,7 +18,7 @@ function mix(a: [number, number, number], b: [number, number, number], t: number
 }
 
 export async function downloadReportPdf(
-  report: AiReport,
+  report: ReportForPdf,
   meta: { firstName: string; businessName: string },
 ) {
   const { jsPDF } = await import("jspdf");
