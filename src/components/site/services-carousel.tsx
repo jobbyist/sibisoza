@@ -1,76 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  LayoutTemplate,
-  BarChart3,
-  Palette,
-  Mic,
-  Zap,
-  Megaphone,
-  type LucideIcon,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
-
-type Service = {
-  n: string;
-  title: string;
-  tag: string;
-  copy: string;
-  icon: LucideIcon;
-  border: string; // gradient border direction / colors
-};
-
-const SERVICES: Service[] = [
-  {
-    n: "01",
-    title: "High-Performance Landing Pages",
-    tag: "Convert Engine",
-    copy: "High-converting websites built for rapid deployment and lead generation.",
-    icon: LayoutTemplate,
-    border: "from-[#FF6A00] to-[#FF3D3D]",
-  },
-  {
-    n: "02",
-    title: "Analytics & Insights Reporting",
-    tag: "Retain Engine",
-    copy: "Actionable business intelligence powered by GA4, Looker and performance dashboards.",
-    icon: BarChart3,
-    border: "from-[#FF3D3D] to-[#E91E63]",
-  },
-  {
-    n: "03",
-    title: "Brand Identity & Visual Design Systems",
-    tag: "Attract Engine",
-    copy: "Strategic brand identities and scalable visual systems for modern businesses.",
-    icon: Palette,
-    border: "from-[#E91E63] to-[#FF6A00]",
-  },
-  {
-    n: "04",
-    title: "Podcast & Content Marketing Launchpad",
-    tag: "Attract + Retain",
-    copy: "Launch, distribute and grow authority through premium content ecosystems.",
-    icon: Mic,
-    border: "from-[#FF6A00] to-[#E91E63]",
-  },
-  {
-    n: "05",
-    title: "Marketing & Sales Automation",
-    tag: "Convert + Retain",
-    copy: "Intelligent CRM, automation and AI-powered lead nurturing systems.",
-    icon: Zap,
-    border: "from-[#FF3D3D] to-[#FF6A00]",
-  },
-  {
-    n: "06",
-    title: "Social Media Ad Creatives",
-    tag: "Attract Engine",
-    copy: "Scroll-stopping creative campaigns designed to maximize engagement and conversions.",
-    icon: Megaphone,
-    border: "from-[#E91E63] to-[#FF3D3D]",
-  },
-];
+import { SERVICES, type ServiceDetail } from "@/lib/services-data";
 
 const AUTOPLAY_MS = 5000;
 
@@ -144,7 +76,7 @@ export function ServicesCarousel() {
         >
           {SERVICES.map((s) => (
             <div
-              key={s.n}
+              key={s.slug}
               className="shrink-0 px-3"
               style={{ width: `${cardWidthPct}%` }}
             >
@@ -195,22 +127,21 @@ export function ServicesCarousel() {
   );
 }
 
-function ServiceCard({ service }: { service: Service }) {
+function ServiceCard({ service }: { service: ServiceDetail }) {
   const Icon = service.icon;
   return (
-    <div
+    <Link
+      to="/services/$slug"
+      params={{ slug: service.slug }}
       className={cn(
-        "relative rounded-3xl p-[1.5px] bg-gradient-to-br shadow-soft h-full",
+        "group relative block rounded-3xl p-[1.5px] bg-gradient-to-br shadow-soft h-full hover:shadow-brand transition-shadow",
         service.border,
       )}
     >
       <div className="relative h-full rounded-[calc(1.5rem-1.5px)] bg-white dark:bg-neutral-950 p-7 flex flex-col">
         <div className="flex items-start justify-between">
           <span
-            className={cn(
-              "inline-flex items-center justify-center h-12 w-12 rounded-full border-2 bg-white dark:bg-neutral-950",
-              "border-transparent bg-clip-padding",
-            )}
+            className="inline-flex items-center justify-center h-12 w-12 rounded-full border-2 bg-white dark:bg-neutral-950 border-transparent bg-clip-padding"
             style={{
               backgroundImage:
                 "linear-gradient(white, white), linear-gradient(135deg,#FF6A00,#E91E63)",
@@ -225,7 +156,7 @@ function ServiceCard({ service }: { service: Service }) {
           </span>
         </div>
 
-        <h3 className="mt-6 text-xl font-bold text-black dark:text-white leading-snug">
+        <h3 className="mt-6 text-xl font-bold text-black dark:text-white leading-snug group-hover:text-brand-gradient transition-colors">
           {service.title}
         </h3>
 
@@ -242,13 +173,18 @@ function ServiceCard({ service }: { service: Service }) {
           {service.copy}
         </p>
 
-        <div
-          className={cn(
-            "mt-6 h-[3px] w-14 rounded-full bg-gradient-to-r",
-            service.border,
-          )}
-        />
+        <div className="mt-6 flex items-center justify-between">
+          <div
+            className={cn(
+              "h-[3px] w-14 rounded-full bg-gradient-to-r",
+              service.border,
+            )}
+          />
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-black/60 dark:text-white/60 group-hover:text-brand-gradient transition-colors">
+            View details <ArrowRight className="h-3 w-3" />
+          </span>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
