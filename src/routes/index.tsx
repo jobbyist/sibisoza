@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   Magnet,
@@ -414,24 +414,24 @@ function Podcast() {
   return (
     <Section id="podcast">
       <div className="rounded-[32px] border border-black/10 dark:border-white/10 bg-mist dark:bg-white/[.03] p-8 sm:p-12 grid lg:grid-cols-[1fr_1.2fr] gap-10 items-center">
-        <div className="relative aspect-square max-w-[360px] w-full rounded-3xl overflow-hidden shadow-brand" style={{ background: "var(--brand-gradient)" }}>
+        <Link to="/podcast" className="relative aspect-square max-w-[360px] w-full rounded-3xl overflow-hidden shadow-brand block group" style={{ background: "var(--brand-gradient)" }}>
           <div className="absolute inset-0 flex flex-col justify-between p-6 text-white">
             <span className="text-xs font-semibold uppercase tracking-[0.18em] opacity-90">The Sibiso Growth Podcast</span>
             <div>
               <div className="text-3xl font-extrabold leading-tight">
                 Conversations on growth, brand & the future of business.
               </div>
-              <button className="mt-6 inline-flex items-center gap-2 rounded-full bg-white text-black font-semibold px-4 py-2 text-sm hover:bg-white/90">
+              <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-white text-black font-semibold px-4 py-2 text-sm group-hover:bg-white/90">
                 <Play className="h-4 w-4 fill-black" /> Listen to the latest
-              </button>
+              </span>
             </div>
           </div>
-        </div>
+        </Link>
         <div>
           <Eyebrow>Podcast</Eyebrow>
           <h2 className="mt-5 text-3xl sm:text-5xl font-extrabold leading-[1.05]">Strategy, unfiltered.</h2>
           <p className="mt-4 text-black/60 dark:text-white/60 leading-relaxed max-w-xl">
-            Weekly conversations with founders, marketers and operators on what actually moves revenue. Player and episode library coming soon.
+            Weekly conversations with founders, marketers and operators on what actually moves revenue. Stream featured episodes now.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="https://sibisomarketing.substack.com" target="_blank" rel="noreferrer">
@@ -439,9 +439,11 @@ function Podcast() {
                 Subscribe on Substack
               </Button>
             </a>
-            <Button variant="ghost" size="lg" className="rounded-full">
-              Browse episodes
-            </Button>
+            <Link to="/podcast">
+              <Button variant="ghost" size="lg" className="rounded-full">
+                Browse episodes
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
